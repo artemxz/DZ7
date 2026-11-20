@@ -8,7 +8,7 @@ struct Trackable {
     Trackable(int i) : id(i) {}
     ~Trackable() { destroy_count++; }
 
-    // 🛠️ ДОБАВЛЕНО: Учим компилятор выводить Trackable на экран
+    
     friend std::ostream& operator<<(std::ostream& os, const Trackable& t) {
         return os << "Trackable(" << t.id << ")";
     }
