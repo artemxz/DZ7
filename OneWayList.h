@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include <iostream>
 
 template <typename T>
@@ -24,8 +24,7 @@ public:
     }
   
 
-    OneWayList(const OneWayList& other)
-        : m_head(nullptr), m_tail(nullptr), m_size(0) {
+    OneWayList(const OneWayList& other) : m_head(nullptr), m_tail(nullptr), m_size(0) {
         Node<T>* current = other.m_head;
         while (current != nullptr) {
             push_back(current->m_data); 
@@ -33,7 +32,7 @@ public:
         }
     }
 
-    OneWayList& operator=(const OneWayList& other) {
+    OneWayList& operator = (const OneWayList& other) {
         if (this != &other) {
             Node<T>* current = m_head;
             while (current != nullptr) {
@@ -54,7 +53,7 @@ public:
         return *this;
     }
 
-    OneWayList(OneWayList&& other) noexcept
+    OneWayList(OneWayList&& other) noexcept 
         : m_head(other.m_head), m_tail(other.m_tail), m_size(other.m_size) {
         other.m_head = nullptr;
         other.m_tail = nullptr;
@@ -119,7 +118,7 @@ public:
     T& operator[](size_t index) {
         Node<T>* current = m_head;
         if (index >= m_size) {
-            throw std::out_of_range("Индекс за пределами списка");
+            throw std::out_of_range("Index out of range"); // изменил
         }
 
         for (size_t i = 0; i < index; i++) {
@@ -132,7 +131,7 @@ public:
     const T& operator[](size_t index) const {
         Node<T>* current = m_head;
         if (index >= m_size) {
-            throw std::out_of_range("Индекс за пределами списка");
+            throw std::out_of_range("Index out of range");// изменил
         }
 
         for (size_t i = 0; i < index; i++) {
@@ -144,17 +143,20 @@ public:
     void erase(size_t index) {
 
         if (index >= m_size) {
-            throw std::out_of_range("Призраков не трогаем, только живых");
+            throw std::out_of_range("Index out of bounds in erase"); // изменил
 
         }
 
         if (index == 0) {
             Node<T>* temp = m_head;
             m_head = m_head->next;
+            if (m_head == nullptr) { // добавил
+                m_tail = nullptr;
+            }
             delete temp;
             m_size--;
         }
-
+        
         else {
             Node<T>* current = m_head;
 
@@ -165,9 +167,10 @@ public:
 
             Node<T>* node_to_delete = current->next;
 
-            if (node_to_delete == m_tail) {
+            if (node_to_delete == m_tail) { 
                 m_tail = current;
             }
+
             current->next = node_to_delete->next;
             delete node_to_delete;
             m_size--;
@@ -177,16 +180,20 @@ public:
     void insert(size_t index, const T& value) {
 
         if (index > m_size) {
-            throw std::out_of_range("Призраков не трогаем, только живых");
+            throw std::out_of_range("Index out of bounds in insert"); // изменил
         }
 
+        if (index == m_size) { // добавил
+            push_back(value); 
+            return;
+        }
 
         if (index == 0) {
             Node<T>* new_node = new Node<T>(value);
             new_node->next = m_head;
             m_head = new_node;
 
-            if (m_size == 0) {
+           if (m_size == 0) {
                 m_tail = new_node;
             }
             m_size++;
@@ -207,10 +214,10 @@ public:
         current->next = new_node;
 
 
-        if (index == m_size) {
+      /* if (index == m_size) { 
             m_tail = new_node;
         }
-
+      */
         m_size++;
     }
 
